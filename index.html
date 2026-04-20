@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Internet Speed-Logger</title>
+    
+    <link rel="stylesheet" href="style.css">
+    
+    <img src="netstat.png" alt="netstat logo" class="logo">
+ 
+</head>
+<body>
+    <p>YOUR INTERNET SPEED IS </p>
+
+    <div class="network-value">
+        <span class="numbers">0</span>
+        <span class="units">Mbps</span>
+    </div>
+
+    <div class="buttons">
+        <button id="start-btn">Check Stat</button>
+    </div>
+          
+    <div class="speed-test-results">
+        <div class="result-items">
+            <span class="label">Last Speed</span>
+            <span id="last-speed" class="value">--</span>
+        </div>
+
+        <div class="result-items">
+            <span class="label">Average Speed</span>
+            <span id="average-speed" class="value">--</span>
+        </div>
+
+        <div class="result-items">
+            <span class="label">Total Tests</span>
+            <span id="total-tests" class="value">0</span>
+        </div>
+    </div>
+
+    <div class="peak-time">
+        <span class="peak-text">Peak network time: </span>
+        <span id="best-speed" class="best-value">Morning</span>
+    </div>
+
+    <script src="script.js"></script>
+
+</body>
+</html>
