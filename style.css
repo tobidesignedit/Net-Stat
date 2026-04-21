@@ -1,13 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 
-
 :root {
-  --main-color: #f8fafc;       /* A color variable */
-  --base-padding: 16px;        /* A size variable */
-  --heading-font: 'Inter', s-serif; /* A font variable */
+  --main-color: #f8fafc;
+  --base-padding: 16px;
+  --heading-font: 'Inter', sans-serif;
 }
 
-/* In your main CSS file */
+/* --- Your Original Dashboard Features --- */
 .dashboard {
   display: flex;
   justify-content: center;
@@ -36,7 +35,7 @@
     color: #000000;
 }
 
-#start-btn{
+#start-btn {
     background-color:#f3f4fa;
     color: rgb(41, 41, 41);
     border: 2px solid #c1c1c1;
@@ -46,46 +45,63 @@
     cursor: pointer;
     transition: all 0.3s ease;
     position: relative;
-  }
+    overflow: hidden; /* Added to contain the rotating border */
+    z-index: 1;
+}
 
 #start-btn:hover {
     box-shadow: 0 5px 15px rgba(44, 44, 44, 0.4);
 }
 
-/* Click Event */
 #start-btn:active {
     transform: scale(0.95);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* Loading State */
+/* --- Loading State (Yellow with Chasing Border) --- */
 #start-btn.loading {
-    background-color: #fffacd;
-    border-color: hsl(51, 100%, 50%);
-    box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.2), 0 5px 15px rgba(255, 215, 0, 0.3);
-    animation: rotatingBorder 2s linear infinite;
+    border: none;
+    background: transparent; 
 }
 
-/* Rotating border animation */
+#start-btn.loading::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: conic-gradient(
+        transparent, 
+        transparent 30%, 
+        #ffd700 /* The Gold/Yellow Chaser */
+    );
+    animation: spin 1.5s linear infinite;
+    z-index: -2;
+}
+
+#start-btn.loading::after {
+    content: '';
+    position: absolute;
+    inset: 3px; 
+    background: #fffacd; /* Your requested Yellow background */
+    border-radius: 13px;
+    z-index: -1;
+}
+
 @keyframes spin {
-   from {
-    transform: rotate(0deg);
-   }
-
-   to{
-    transform: rotate(360deg);
-   }
+   from { transform: rotate(0deg); }
+   to { transform: rotate(360deg); }
 }
 
-/* Complete State */
+/* --- Complete State & Other Elements --- */
 #start-btn.complete {
     background-color: #f0fff1;
-    border-color: #47c947;
+    border: 2px solid #47c947;
     box-shadow: 0 0 0 3px rgba(71, 201, 71, 0.2), 0 5px 15px rgba(71, 201, 71, 0.3);
     animation: none;
 }
 
-/* To position it specifically */
 .speed-loader-wrapper {
   position: absolute;
   top: 50%;
@@ -94,13 +110,11 @@
 }
 
 .logo {
-    width: 300px;
+    width: 100%;
+    max-width: 300px;
     height: auto;
     display: block;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 40px;
-    margin-bottom: 70px;    
+    margin: 40px auto 70px auto;
 }
 
 * {
@@ -117,21 +131,19 @@ body {
 
 p {
     text-align: center;
-    font-size: 30px;
+    font-size: clamp(22px, 5vw, 30px);
     font-weight: 600;
 }
 
-/* Main Container */
 .speed-test-results {
     display: flex;
     justify-content: center;
     gap: 20px;
     max-width: 1100px;
     margin: 0 auto;
-    flex-wrap: wrap;        /* Allow wrapping on smaller screens */
+    flex-wrap: wrap;
 }
 
-/* Network Values in Number*/
 .network-value {
     display: flex;
     align-items: baseline;
@@ -140,58 +152,33 @@ p {
 }
 
 .numbers {
-    font-size: 300px;
+    font-size: clamp(120px, 20vw, 300px);
     font-weight: 400;
     color: #333;
     line-height: 1;
-
 }
 
 .units {
-    font-size: 50px;
+    font-size: clamp(24px, 5vw, 50px);
     color: #777
 }
 
-/* Box 1- Last Speed*/
-.result-items:nth-child(1) {
-    background:  #fff0f0;
-    border: #c00101;
-    border-width: 1px;
-}
+/* Box Colors */
+.result-items:nth-child(1) { background: #fff0f0; border: 1px solid #f8a6a6; }
+.result-items:nth-child(1) .value { color: #c00101; }
 
-.result-items:nth-child(1) .value {
-    color:#c00101
-}
+.result-items:nth-child(2) { background: #f0fff1; border: 1px solid #9eff9e; }
+.result-items:nth-child(2) .value { color: #47c947; }
 
-/* Box 2- Average Speed*/
-.result-items:nth-child(2) {
-    background:  #f0fff1;
-    border: #47c947;
-    border-width: 1px;
-}
+.result-items:nth-child(3) { background: #f0f6ff; border: 1px solid #9aa8f8; }
+.result-items:nth-child(3) .value { color: #475ac9; }
 
-.result-items:nth-child(2) .value {
-    color:#47c947
-}
-
-/* Box 3- Best Speed*/
-.result-items:nth-child(3) {
-    background:  #f0f6ff;
-    border: #475ac9;
-    border-width: 1px;
-}
-
-.result-items:nth-child(3) .value {
-    color:#475ac9
-}
-
-/* Common Styles for all boxes */
- .result-items {
+.result-items {
     padding: 28px 24px;
     text-align: center;
     border-radius: 16px;
     flex: 1;
-    min-width: 220px;
+    min-width: 250px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
     transition: all 0.3s ease;
 }
@@ -201,7 +188,6 @@ p {
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
 }
 
-/*Value*/
 .value {
     display: block;
     font-size: 26px;
@@ -211,6 +197,8 @@ p {
 
 /* Responsive */
 @media (max-width: 768px) {
+    body { padding: 20px 10px; }
+    .logo { max-width: 200px; }
     .speed-test-results {
         flex-direction: column;
         align-items: center;
