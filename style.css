@@ -152,7 +152,7 @@ p {
 }
 
 .numbers {
-    font-size: clamp(120px, 20vw, 300px);
+    font-size: 300px; /* Keep it at your original desktop size */
     font-weight: 400;
     color: #333;
     line-height: 1;
@@ -195,7 +195,7 @@ p {
     line-height: 1.8;
 }
 
-/* Responsive */
+/* Responsive
 @media (max-width: 768px) {
     body { padding: 20px 10px; }
     .logo { max-width: 200px; }
@@ -207,4 +207,4 @@ p {
         max-width: 320px;
         width: 100%;
     }
-}
+} */
