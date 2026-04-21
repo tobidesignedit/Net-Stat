@@ -147,4 +147,12 @@ startBtn.addEventListener('click', async function() {
         startBtn.classList.remove('loading');
         speedDisplay.style.color = "";
     }
-});
+
+ });
+
+window.addEventListener('DOMContentLoaded', () => {
+       const startBtn = document.getElementById('start-btn');
+       if (startBtn) {
+           startBtn.click();
+        }
+    });
