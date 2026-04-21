@@ -114,7 +114,7 @@
 
 .logo {
     width: 100%;
-    max-width: 300px;
+    max-width: 180px;
     height: auto;
     display: block;
     margin: 40px auto 50px auto;
@@ -137,6 +137,7 @@ p {
     text-align: center;
     font-size: clamp(20px, 5vw, 30px); /* Responsive text size */
     font-weight: 600;
+    margin-bottom: 40px;
 }
 
 /* Main Container - This FORCES the side-by-side look */
@@ -185,12 +186,15 @@ p {
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
     transition: all 0.3s ease;
     border: 1px solid transparent;
+
+    white-space: nowrap;
+    font-size: 14px;
 }
 
 .value {
     display: block;
     font-size: clamp(14px, 3vw, 26px); /* Shrinks text inside boxes */
-    font-weight: 800;
+    font-weight: 650;
     line-height: 1.8;
 }
 
