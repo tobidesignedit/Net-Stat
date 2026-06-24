@@ -1,123 +1,39 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Inter:wght@100..900&display=swap');
+
+/* 
+   =========================================
+   DESIGN LAWS APPLIED:
+   1. AESTHETIC-USABILITY EFFECT:
+      Users perceive aesthetic design as more usable. The liquid glassmorphism, 
+      flowing backgrounds, and elegant micro-animations increase trust and satisfaction.
+   2. FITTS'S LAW:
+      The main "Check Stat" button is large, capsule-shaped, and centrally positioned, 
+      making it highly accessible with a large click target.
+   3. HICK'S & MILLER'S LAWS:
+      Minimize choices and chunk information. We have exactly one primary action 
+      and group the results into three simple, digestible cards.
+   4. LAW OF PROXIMITY (GESTALT):
+      Related metrics (Last, Average, and Count) are placed close together in a 
+      distinct horizontal row container, indicating their relation.
+   5. JAKOB'S LAW:
+      Standard speed dashboard structure (huge speed display at the top, supporting 
+      stats below) matching common user expectations from other speed test sites.
+   =========================================
+*/
 
 :root {
-  --main-color: #f8fafc;
-  --base-padding: 16px;
-  --heading-font: 'Inter', sans-serif;
-}
-
-
-/* --- Your Original Dashboard Features --- */
-.dashboard {
-  display: flex;
-  justify-content: center;
-  padding: 40px;
-  background: #fff;
-}
-
-.buttons {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 30px;
-    margin-bottom: 50px;
-}
-
-.peak-time {
-    display: block;
-    text-align: center;
-    font-size: 22px;
-    font-weight: 500;
-    color: #555;
-    padding: 40px;
-}
-
-.best-value {
-    color: #000000;
-}
-
-#start-btn {
-    background-color:#f3f4fa;
-    color: rgb(41, 41, 41);
-    border: 2px solid #c1c1c1;
-    padding: 14px 32px;
-    font-size: 18px;
-    border-radius: 15px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden; /* Added to contain the rotating border */
-    z-index: 1;
-}
-
-#start-btn:hover {
-    box-shadow: 0 5px 15px rgba(44, 44, 44, 0.4);
-}
-
-#start-btn:active {
-    transform: scale(0.95);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-/* --- Loading State (Yellow with Chasing Border) --- */
-#start-btn.loading {
-    border: none;
-    background: transparent; 
-}
-
-#start-btn.loading::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: conic-gradient(
-        transparent, 
-        transparent 30%, 
-        #ffd700 /* The Gold/Yellow Chaser */
-    );
-    animation: spin 1.5s linear infinite;
-    z-index: -2;
-}
-
-#start-btn.loading::after {
-    content: '';
-    position: absolute;
-    inset: 3px; 
-    background: #fffacd; /* Your requested Yellow background */
-    border-radius: 13px;
-    z-index: -1;
-}
-
-@keyframes spin {
-   from { transform: rotate(0deg); }
-   to { transform: rotate(360deg); }
-}
-
-/* --- Complete State & Other Elements --- */
-#start-btn.complete {
-    background-color: #f0fff1;
-    border: 2px solid #47c947;
-    box-shadow: 0 0 0 3px rgba(71, 201, 71, 0.2), 0 5px 15px rgba(71, 201, 71, 0.3);
-    animation: none;
-}
-
-.speed-loader-wrapper {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
-/* --- Replace everything from .logo downwards with this --- */
-
-.logo {
-    width: 100%;
-    max-width: 180px;
-    height: auto;
-    display: block;
-    margin: 40px auto 50px auto;
+  --main-color: #0b0c10;
+  --text-primary: #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.6);
+  --heading-font: 'Outfit', sans-serif;
+  --body-font: 'Inter', sans-serif;
+  
+  /* Neon Glass Colors */
+  --glow-pink: rgba(255, 51, 102, 0.6);
+  --glow-green: rgba(51, 235, 145, 0.6);
+  --glow-blue: rgba(51, 201, 255, 0.6);
+  --glass-bg: rgba(255, 255, 255, 0.03);
+  --glass-border: rgba(255, 255, 255, 0.08);
 }
 
 * {
@@ -128,84 +44,392 @@
 
 body {
     background-color: var(--main-color);
-    font-family: var(--heading-font);
-    padding: 40px 15px; /* Reduced side padding for mobile */
-    overflow-x: hidden; /* Prevents the "wiggle" on mobile */
-}
-
-p {
-    text-align: center;
-    font-size: clamp(20px, 5vw, 30px); /* Responsive text size */
-    font-weight: 600;
-    margin-bottom: 40px;
-}
-
-/* Main Container - This FORCES the side-by-side look */
-.speed-test-results {
+    color: var(--text-primary);
+    font-family: var(--body-font);
+    min-height: 100vh;
     display: flex;
-    flex-direction: row; /* Stay in a line */
-    flex-wrap: nowrap;   /* DO NOT wrap to next line */
     justify-content: center;
-    gap: 10px;           /* Tight gap so they fit */
-    max-width: 1100px;
-    margin: 0 auto;
+    align-items: center;
+    overflow-x: hidden;
+    position: relative;
+    padding: 40px 20px;
+}
+
+/* --- iOS Liquid Background Blobs --- */
+.blob-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    overflow: hidden;
+    background: radial-gradient(circle at 50% 50%, #16192b 0%, #090a0f 100%);
+}
+
+.blob {
+    position: absolute;
+    width: clamp(300px, 45vw, 600px);
+    height: clamp(300px, 45vw, 600px);
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.45;
+    mix-blend-mode: screen;
+    pointer-events: none;
+    transition: all 1s ease;
+}
+
+.blob-blue {
+    background: radial-gradient(circle, rgba(0, 114, 255, 0.8) 0%, rgba(0, 114, 255, 0) 70%);
+    top: -10%;
+    left: -10%;
+    animation: float-blue 25s infinite alternate ease-in-out;
+}
+
+.blob-purple {
+    background: radial-gradient(circle, rgba(112, 40, 228, 0.7) 0%, rgba(112, 40, 228, 0) 70%);
+    bottom: -15%;
+    right: -10%;
+    animation: float-purple 30s infinite alternate ease-in-out;
+}
+
+.blob-cyan {
+    background: radial-gradient(circle, rgba(0, 242, 254, 0.6) 0%, rgba(0, 242, 254, 0) 70%);
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation: float-cyan 28s infinite alternate ease-in-out;
+}
+
+@keyframes float-blue {
+    0% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(150px, 80px) scale(1.15); }
+    100% { transform: translate(50px, 180px) scale(0.9); }
+}
+
+@keyframes float-purple {
+    0% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(-100px, -120px) scale(0.85); }
+    100% { transform: translate(-180px, -40px) scale(1.1); }
+}
+
+@keyframes float-cyan {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    50% { transform: translate(-30%, -60%) rotate(120deg) scale(1.2); }
+    100% { transform: translate(-60%, -40%) rotate(240deg) scale(0.85); }
+}
+
+/* --- App Layout Container --- */
+.app-container {
     width: 100%;
+    max-width: 680px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    z-index: 1;
+}
+
+header {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 5px;
+}
+
+.logo {
+    max-width: 140px;
+    height: auto;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+    opacity: 0.95;
+    transition: transform 0.3s ease;
+}
+
+.logo:hover {
+    transform: scale(1.05);
+}
+
+/* --- iOS Glassmorphism Card Style --- */
+.glass-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(30px) saturate(210%);
+    -webkit-backdrop-filter: blur(30px) saturate(210%);
+    border: 1px solid var(--glass-border);
+    border-radius: 28px;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35), 
+                inset 0 1px 1px rgba(255, 255, 255, 0.12);
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                border-color 0.4s ease;
+}
+
+.glass-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(255, 255, 255, 0.16);
+    box-shadow: 0 24px 50px rgba(0, 0, 0, 0.45), 
+                inset 0 1px 1px rgba(255, 255, 255, 0.22);
+}
+
+/* --- Main Card Layout --- */
+.main-card {
+    padding: 40px 30px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.subtitle-label {
+    font-size: 13px;
+    letter-spacing: 4px;
+    color: var(--text-secondary);
+    font-family: var(--heading-font);
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 25px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .network-value {
     display: flex;
     align-items: baseline;
     justify-content: center;
-    gap: 10px;
+    gap: 8px;
+    margin-bottom: 30px;
+    position: relative;
 }
 
 .numbers {
-    /* This says: Be at least 150px, ideally 30% of the screen width, but don't exceed 450px */
-    font-size: clamp(150px, 35vw, 450px); 
-    font-weight: 400;
-    color: #333;
-    line-height: 0.8; /* Tighter line height makes it look more "designed" and pro */
-    display: block;
-    text-align: center;
+    font-size: clamp(90px, 15vw, 150px);
+    font-family: var(--heading-font);
+    font-weight: 300;
+    line-height: 0.9;
+    background: linear-gradient(180deg, #ffffff 40%, #c7d2fe 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 4px 12px rgba(99, 102, 241, 0.15));
+    transition: color 0.3s ease;
 }
 
 .units {
-    /* Keep units proportional to the giant number */
-    font-size: clamp(30px, 8vw, 60px);
-    color: #777;
-    margin-left: 10px;
+    font-size: clamp(24px, 4vw, 36px);
+    font-weight: 600;
+    color: var(--text-secondary);
+    font-family: var(--heading-font);
+    letter-spacing: 0.5px;
 }
 
-/* Result Items - These will now shrink but stay side-by-side */
-.result-items {
-    padding: 20px 10px;
-    text-align: center;
-    border-radius: 16px;
-    flex: 1;           /* Share width equally */
-    min-width: 0;      /* Allows them to shrink below 250px */
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-    transition: all 0.3s ease;
-    border: 1px solid transparent;
+/* --- Primary Button: Liquid Glass Capsule --- */
+.buttons {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
 
-    white-space: nowrap;
-    font-size: 14px;
+#start-btn {
+    background: linear-gradient(135deg, rgba(79, 70, 229, 0.6) 0%, rgba(124, 58, 237, 0.6) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    color: #ffffff;
+    padding: 16px 48px;
+    font-size: 18px;
+    font-family: var(--heading-font);
+    font-weight: 600;
+    border-radius: 50px;
+    cursor: pointer;
+    box-shadow: 0 8px 30px rgba(99, 102, 241, 0.25), 
+                inset 0 4px 6px rgba(255, 255, 255, 0.3),
+                inset 0 -2px 6px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Liquid light reflection */
+#start-btn::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.25),
+        transparent
+    );
+    transition: 0.6s;
+}
+
+#start-btn:hover {
+    transform: scale(1.04);
+    box-shadow: 0 15px 40px rgba(99, 102, 241, 0.45), 
+                inset 0 6px 10px rgba(255, 255, 255, 0.4),
+                inset 0 -2px 6px rgba(0, 0, 0, 0.2);
+    border-color: rgba(255, 255, 255, 0.4);
+}
+
+#start-btn:hover::after {
+    left: 100%;
+}
+
+#start-btn:active {
+    transform: scale(0.96);
+    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.2), 
+                inset 0 2px 4px rgba(255, 255, 255, 0.2);
+}
+
+/* --- Button Loading State (Pulsing Glow & Liquid Amber Gradient) --- */
+#start-btn.loading {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.6) 0%, rgba(217, 119, 6, 0.6) 100%);
+    border-color: rgba(255, 255, 255, 0.3);
+    box-shadow: 0 0 35px rgba(245, 158, 11, 0.65), 
+                inset 0 4px 6px rgba(255, 255, 255, 0.35);
+    animation: button-pulse 1.4s infinite alternate ease-in-out;
+    cursor: not-allowed;
+}
+
+@keyframes button-pulse {
+    0% { transform: scale(1); filter: brightness(1); }
+    100% { transform: scale(1.03); filter: brightness(1.15) drop-shadow(0 0 8px rgba(245, 158, 11, 0.4)); }
+}
+
+/* --- Button Complete State (Succulent Emerald Glass) --- */
+#start-btn.complete {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.6) 0%, rgba(5, 150, 105, 0.6) 100%);
+    border-color: rgba(255, 255, 255, 0.4);
+    box-shadow: 0 0 35px rgba(16, 185, 129, 0.65), 
+                inset 0 4px 6px rgba(255, 255, 255, 0.4);
+    animation: button-pop 0.5s ease-out 1;
+}
+
+@keyframes button-pop {
+    0% { transform: scale(0.95); }
+    50% { transform: scale(1.06); }
+    100% { transform: scale(1); }
+}
+
+/* --- Historical Metric Cards Grid --- */
+.speed-test-results {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    width: 100%;
+}
+
+.result-items {
+    padding: 22px 12px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+    font-family: var(--heading-font);
 }
 
 .value {
     display: block;
-    font-size: clamp(14px, 3vw, 26px); /* Shrinks text inside boxes */
-    font-weight: 650;
-    line-height: 1.8;
+    font-size: clamp(16px, 3.5vw, 24px);
+    font-family: var(--heading-font);
+    font-weight: 700;
+    line-height: 1.2;
 }
 
-/* Box Colors (Keep your original colors) */
-.result-items:nth-child(1) { background: #fff0f0; border-color: #f8a6a6; }
-.result-items:nth-child(1) .value { color: #c00101; }
+/* Color accents with glowing base indicator lines */
+.card-last {
+    border-bottom: 3px solid var(--glow-pink);
+}
+.card-last .value {
+    color: #ff6090;
+    text-shadow: 0 0 15px rgba(255, 51, 102, 0.2);
+}
 
-.result-items:nth-child(2) { background: #f0fff1; border-color: #9eff9e; }
-.result-items:nth-child(2) .value { color: #47c947; }
+.card-avg {
+    border-bottom: 3px solid var(--glow-green);
+}
+.card-avg .value {
+    color: #40f7ad;
+    text-shadow: 0 0 15px rgba(51, 235, 145, 0.2);
+}
 
-.result-items:nth-child(3) { background: #f0f6ff; border-color: #9aa8f8; }
-.result-items:nth-child(3) .value { color: #475ac9; }
+.card-tests {
+    border-bottom: 3px solid var(--glow-blue);
+}
+.card-tests .value {
+    color: #60d2ff;
+    text-shadow: 0 0 15px rgba(51, 201, 255, 0.2);
+}
 
-/* NOTE: Ensure you have DELETED the old @media query at the bottom */
+/* --- Footer Peak Card --- */
+.peak-card {
+    border-radius: 20px;
+    padding: 16px 24px;
+}
+
+.peak-time {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+.best-value {
+    color: #ffffff;
+    font-weight: 700;
+    font-family: var(--heading-font);
+    letter-spacing: 0.5px;
+    background: rgba(255, 255, 255, 0.08);
+    padding: 4px 10px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* --- Responsive Adjustments --- */
+@media (max-width: 480px) {
+    body {
+        padding: 20px 12px;
+    }
+    
+    .app-container {
+        gap: 15px;
+    }
+    
+    .main-card {
+        padding: 30px 20px;
+    }
+    
+    .speed-test-results {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    
+    .result-items {
+        padding: 16px;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: none;
+    }
+    
+    .card-last { border-left: 4px solid var(--glow-pink); }
+    .card-avg { border-left: 4px solid var(--glow-green); }
+    .card-tests { border-left: 4px solid var(--glow-blue); }
+    
+    .label {
+        margin-bottom: 0;
+    }
+}

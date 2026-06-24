@@ -3,49 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NetStat</title>
+    <title>NetStat — Internet Speed Test</title>
     
     <link rel="icon" type="image/png" href="AtlasFavicon.png">
     <link rel="stylesheet" href="style.css">
-    
-    <img src="netstat.png" alt="netstat logo" class="logo">
- 
 </head>
 <body>
-    <p>YOUR INTERNET SPEED IS </p>
-
-    <div class="network-value">
-        <span class="numbers">0</span>
-        <span class="units">Mbps</span>
+    <!-- iOS Liquid Glass Background Blobs -->
+    <div class="blob-bg">
+        <div class="blob blob-blue"></div>
+        <div class="blob blob-purple"></div>
+        <div class="blob blob-cyan"></div>
     </div>
 
-    <div class="buttons">
-        <button id="start-btn">Check Stat</button>
-    </div>
-          
-    <div class="speed-test-results">
-        <div class="result-items">
-            <span class="label">Last Speed</span>
-            <span id="last-speed" class="value">--</span>
-        </div>
+    <!-- App Content Wrapper -->
+    <div class="app-container">
+        <header>
+            <img src="netstat.png" alt="netstat logo" class="logo">
+        </header>
 
-        <div class="result-items">
-            <span class="label">Average Speed</span>
-            <span id="average-speed" class="value">--</span>
-        </div>
-
-        <div class="result-items">
-            <span class="label">Total Tests</span>
-            <span id="total-tests" class="value">0</span>
-        </div>
-    </div>
-
-    <div class="peak-time">
-        <span class="peak-text">Peak network time: </span>
-        <span id="best-speed" class="best-value">--</span>
+        <!-- Main Speed Meter Widget -->
+        <main class="glass-card main-card">
+            <p class="subtitle-label">YOUR INTERNET SPEED IS</p>
+        
+            <div class="network-value">
+                <span class="numbers">0</span>
+                <span class="units">Mbps</span>
+            </div>
+        
+            <div class="buttons">
+                <button id="start-btn">Check Stat</button>
+            </div>
+        </main>
+              
+        <!-- Historical/Supporting metrics grid -->
+        <section class="speed-test-results">
+            <div class="result-items glass-card card-last">
+                <span class="label">Last Speed</span>
+                <span id="last-speed" class="value">--</span>
+            </div>
+    
+            <div class="result-items glass-card card-avg">
+                <span class="label">Average Speed</span>
+                <span id="average-speed" class="value">--</span>
+            </div>
+    
+            <div class="result-items glass-card card-tests">
+                <span class="label">Total Tests</span>
+                <span id="total-tests" class="value">0</span>
+            </div>
+        </section>
+    
+        <!-- Peak Network Time Widget -->
+        <footer class="glass-card peak-card">
+            <div class="peak-time">
+                <span class="peak-text">Peak network time: </span>
+                <span id="best-speed" class="best-value">--</span>
+            </div>
+        </footer>
     </div>
 
     <script src="script.js"></script>
-
 </body>
 </html>

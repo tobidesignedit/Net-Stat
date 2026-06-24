@@ -6,10 +6,80 @@ const speedDisplay = document.querySelector('.numbers');
 const lastSpeedDisplay = document.getElementById('last-speed');
 const averageSpeedDisplay = document.getElementById('average-speed');
 const totalTestsDisplay = document.getElementById('total-tests');
+const bestSpeedDisplay = document.getElementById('best-speed');
 const unitsDisplay = document.querySelector('.units');
 
 let testCount = 0;
 let speedHistory = [];
+let peakSpeed = 0;
+let peakTime = null;
+
+// Helper to format speeds consistently in text widgets
+function formatSpeed(speedMbps) {
+    if (speedMbps >= 1) {
+        return Math.round(speedMbps) + " Mbps";
+    } else {
+        return Math.round(speedMbps * 1000) + " Kbps";
+    }
+}
+
+// Update widgets using stored stats
+function updateUIFromHistory() {
+    // 1. Total tests
+    totalTestsDisplay.textContent = testCount;
+
+    // 2. Last Speed (reads second-to-last or last based on current context)
+    if (speedHistory.length > 0) {
+        const lastSpeed = speedHistory[speedHistory.length - 1];
+        lastSpeedDisplay.textContent = formatSpeed(lastSpeed);
+    } else {
+        lastSpeedDisplay.textContent = "--";
+    }
+
+    // 3. Average Speed
+    if (speedHistory.length > 0) {
+        const avgMbps = speedHistory.reduce((a, b) => a + b, 0) / speedHistory.length;
+        averageSpeedDisplay.textContent = formatSpeed(avgMbps);
+    } else {
+        averageSpeedDisplay.textContent = "--";
+    }
+
+    // 4. Peak Speed and Time of Day
+    if (peakSpeed > 0 && peakTime) {
+        bestSpeedDisplay.textContent = `${peakTime} (${formatSpeed(peakSpeed)})`;
+    } else {
+        bestSpeedDisplay.textContent = "--";
+    }
+}
+
+// Load values from LocalStorage
+function loadStats() {
+    try {
+        const storedHistory = localStorage.getItem('netstat_history');
+        const storedCount = localStorage.getItem('netstat_count');
+        const storedPeakSpeed = localStorage.getItem('netstat_peak_speed');
+        const storedPeakTime = localStorage.getItem('netstat_peak_time');
+
+        if (storedHistory) {
+            speedHistory = JSON.parse(storedHistory);
+        }
+        if (storedCount) {
+            testCount = parseInt(storedCount, 10);
+        } else {
+            testCount = speedHistory.length;
+        }
+        if (storedPeakSpeed) {
+            peakSpeed = parseFloat(storedPeakSpeed);
+        }
+        if (storedPeakTime) {
+            peakTime = storedPeakTime;
+        }
+
+        updateUIFromHistory();
+    } catch (e) {
+        console.error("Failed to load local storage stats:", e);
+    }
+}
 
 startBtn.addEventListener('click', async function() {
     // 1. Reset UI to loading state
@@ -17,14 +87,7 @@ startBtn.addEventListener('click', async function() {
     startBtn.classList.add('loading');
 
     // Make text grey while running
-    speedDisplay.style.color = "grey";
-
-    let currentMainSpeed = speedDisplay.textContent;
-    let currentMainUnits = unitsDisplay.textContent;
-
-    if (parseFloat(currentMainSpeed) > 0) {
-        lastSpeedDisplay.textContent = currentMainSpeed + " " + currentMainUnits;
-    }
+    speedDisplay.style.color = "rgba(255,255,255,0.4)";
 
     const fileUrl = "AtlasBrandingSize.tif?nocache=" + Math.random();
     const maxTestDurationMs = 7000;
@@ -109,7 +172,29 @@ startBtn.addEventListener('click', async function() {
 
         const speedBps = (bytesReceived * 8) / durationInSeconds;
         const speedMbps = speedBps / 1000000; 
+        
         speedHistory.push(speedMbps);
+        testCount++;
+
+        // Save to local storage
+        try {
+            localStorage.setItem('netstat_history', JSON.stringify(speedHistory));
+            localStorage.setItem('netstat_count', testCount.toString());
+            
+            // Check if this is the peak speed
+            if (speedMbps > peakSpeed) {
+                peakSpeed = speedMbps;
+                const now = new Date();
+                const hours = String(now.getHours()).padStart(2, '0');
+                const minutes = String(now.getMinutes()).padStart(2, '0');
+                peakTime = `${hours}:${minutes}`;
+                
+                localStorage.setItem('netstat_peak_speed', peakSpeed.toString());
+                localStorage.setItem('netstat_peak_time', peakTime);
+            }
+        } catch (e) {
+            console.error("Failed to save stats to local storage:", e);
+        }
 
         let displaySpeed, displayUnits;
         if (speedMbps >= 1) {
@@ -123,14 +208,8 @@ startBtn.addEventListener('click', async function() {
         speedDisplay.textContent = displaySpeed;
         unitsDisplay.textContent = displayUnits;
 
-        const avgMbps = speedHistory.reduce((a, b) => a + b, 0) / speedHistory.length;
-        const displayAvg = avgMbps >= 1
-            ? Math.round(avgMbps) + " Mbps"
-            : Math.round(avgMbps * 1000) + " Kbps";
-        averageSpeedDisplay.textContent = displayAvg;
-
-        testCount++;
-        totalTestsDisplay.textContent = testCount;
+        // Force UI updates for supporting widgets
+        updateUIFromHistory();
 
         console.log(`Success! Bytes: ${bytesReceived}, Duration: ${durationInSeconds.toFixed(2)}s, Speed: ${speedMbps.toFixed(2)} Mbps`);
 
@@ -151,8 +230,12 @@ startBtn.addEventListener('click', async function() {
  });
 
 window.addEventListener('DOMContentLoaded', () => {
-       const startBtn = document.getElementById('start-btn');
-       if (startBtn) {
-           startBtn.click();
-        }
-    });
+    // 1. Load historical database first
+    loadStats();
+
+    // 2. Click start to trigger immediate test run
+    const startBtn = document.getElementById('start-btn');
+    if (startBtn) {
+        startBtn.click();
+    }
+});
